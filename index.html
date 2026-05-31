@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAS Robotics - WRO2026</title>
+    <style>
+        /* Xóa khoảng trắng thừa và tràn màn hình */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        /* Màn hình chờ (Loading) */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Logo Placeholder (Xanh Học Đường) */
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background-color: #003366; /* Màu xanh học đường */
+            color: #ffffff;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+        }
+
+        /* Tên ứng dụng */
+        .title {
+            color: #003366;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Thanh Progress Bar */
+        .progress-container {
+            width: 200px;
+            height: 6px;
+            background-color: #e6ecf2;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 100%;
+            background-color: #003366;
+            border-radius: 3px;
+            position: absolute;
+            left: -100%;
+            animation: loading-animation 1.8s infinite ease-in-out;
+        }
+
+        @keyframes loading-animation {
+            0% { left: -100%; }
+            50% { left: 0; }
+            100% { left: 100%; }
+        }
+
+        /* Cấu hình iframe tràn màn hình hoàn toàn */
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hiệu ứng ẩn màn hình loading mượt mà */
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="logo-placeholder">TAS</div>
+        <div class="title">TAS Robotics - WRO2026</div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <iframe 
+        id="app-frame" 
+        src="ĐIỀN_LINK_DEPLOY_APPS_SCRIPT_CỦA_BẠN_VÀO_ĐÂY" 
+        allow="geolocation; microphone; camera; midi; encrypted-media;"
+        sandbox="allow-layouts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+    </iframe>
+
+    <script>
+        const iframe = document.getElementById('app-frame');
+        const loader = document.getElementById('loader');
+
+        // Khi iframe tải xong hoàn toàn dữ liệu, ẩn màn hình Loading đi
+        iframe.addEventListener('load', function() {
+            loader.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
+
