@@ -1,132 +1,1317 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAS Robotics - WRO2026</title>
+    <title>Robot meets Culture Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
     <style>
-        /* Xóa khoảng trắng thừa và tràn màn hình */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        }
-
-        /* Màn hình chờ (Loading) */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        /* Logo Placeholder (Xanh Học Đường) */
-        .logo-placeholder {
-            width: 120px;
-            height: 120px;
-            background-color: #003366; /* Màu xanh học đường */
-            color: #ffffff;
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
-        }
-
-        /* Tên ứng dụng */
-        .title {
-            color: #003366;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Thanh Progress Bar */
-        .progress-container {
-            width: 200px;
-            height: 6px;
-            background-color: #e6ecf2;
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 100%;
-            background-color: #003366;
-            border-radius: 3px;
-            position: absolute;
-            left: -100%;
-            animation: loading-animation 1.8s infinite ease-in-out;
-        }
-
-        @keyframes loading-animation {
-            0% { left: -100%; }
-            50% { left: 0; }
-            100% { left: 100%; }
-        }
-
-        /* Cấu hình iframe tràn màn hình hoàn toàn */
-        iframe {
-            width: 100%;
-            height: 100vh;
-            border: none;
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Hiệu ứng ẩn màn hình loading mượt mà */
-        .hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.05);
-        }
+      @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+      body { font-family: 'Nunito', 'Segoe UI', sans-serif; background: #f0f4ff; }
+      .a4-page {
+        width: 210mm; min-height: 297mm; background: white;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
+        margin: 0 auto; position: relative; overflow: hidden;
+        border-radius: 3px;
+        padding-left: 25mm !important;
+      }
+      .a4-binding-strip {
+        position: absolute; left: 0; top: 0; bottom: 0; width: 25mm;
+        background: linear-gradient(to right, rgba(0,0,0,0.04), rgba(0,0,0,0.01), transparent);
+        border-right: 1px dashed rgba(0,0,0,0.08);
+        pointer-events: none;
+      }
+      @media (max-width: 900px) {
+        .a4-page { width: 100%; min-height: unset; }
+      }
+      .page-flip-enter { animation: slideInRight 0.35s cubic-bezier(.4,0,.2,1); }
+      .page-flip-exit { animation: slideOutLeft 0.35s cubic-bezier(.4,0,.2,1); }
+      .page-flip-enter-rev { animation: slideInLeft 0.35s cubic-bezier(.4,0,.2,1); }
+      @keyframes slideInRight { from { transform: translateX(60px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+      @keyframes slideInLeft { from { transform: translateX(-60px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+      @keyframes slideOutLeft { from { transform: translateX(0); opacity:1; } to { transform: translateX(-60px); opacity:0; } }
+      .gear-bg { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+      .notebook-lines { background-image: repeating-linear-gradient(transparent, transparent 27px, #e2e8f0 27px, #e2e8f0 28px); }
+      .page-number-badge { position: absolute; bottom: 12px; right: 20px; font-size: 11px; color: #94a3b8; font-weight: 600; }
+      .book-header-decoration { background: linear-gradient(135deg, #4338ca 0%, #6366f1 40%, #8b5cf6 70%, #a78bfa 100%); }
+      .smart-img-1 img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; }
+      .smart-img-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .smart-img-2 img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; }
+      .smart-img-3 { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 6px; }
+      .smart-img-3 .main-img img { width: 100%; height: 240px; object-fit: cover; border-radius: 6px; grid-row: 1/3; }
+      .smart-img-3 .side-img img { width: 100%; height: 112px; object-fit: cover; border-radius: 6px; }
+      .smart-img-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .smart-img-4 img { width: 100%; height: 140px; object-fit: cover; border-radius: 6px; }
+      .smart-img-many { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+      .smart-img-many img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; }
+      .comment-scroll { max-height: 150px; overflow-y: auto; }
+      .comment-scroll::-webkit-scrollbar { width: 5px; }
+      .comment-scroll::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 4px; }
+      .custom-scrollbar::-webkit-scrollbar { height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 4px; }
+      @media print {
+        body { background: white; }
+        .no-print { display: none !important; }
+        .a4-page { box-shadow: none; page-break-after: always; }
+        .print-section { display: block !important; }
+      }
     </style>
 </head>
-<body>
+<body class="gear-bg text-slate-900 min-h-screen">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
 
-    <div id="loader">
-        <div class="logo-placeholder">TAS</div>
-        <div class="title">TAS Robotics - WRO2026</div>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
+    const IconBook = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+    const IconSend = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>;
+    const IconLock = () => <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+    const IconHeart = ({ filled }) => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill={filled ? "#ef4444" : "none"} stroke={filled ? "#ef4444" : "currentColor"} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>;
+    const IconCamera = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>;
+    const IconMapPin = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>;
+    const IconUsers = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+    const IconCalendar = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
+    const IconChevronLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>;
+    const IconChevronRight = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>;
+    const IconPrinter = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>;
+    const IconGrid = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>;
+    const IconList = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>;
+
+    const THEMES = [
+      { id: "01", title: "Traditional Decorative Patterns", focus: "Dong Son · Dong Ho Folk Art · Hue Patterns", problem: "How can robots showcase Vietnam's decorative heritage?" },
+      { id: "02", title: "Cultural Heritage Site Guide", focus: "Museums · Historical Sites · Living Culture", problem: "How can a robot guide visitors through heritage sites?" },
+      { id: "03", title: "Vietnamese Traditional Instruments", focus: "Dan Bau · Dan Tranh · T'rung · Trong", problem: "How can robots help people understand traditional music?" },
+      { id: "04", title: "Traditional Craft Villages", focus: "Van Phuc Silk · Bat Trang Ceramics · Dong Ky Wood", problem: "How can robots preserve and promote craft village skills?" },
+      { id: "05", title: "Traditional Arts in the Classroom", focus: "Folk Art · Music · Dance · Storytelling", problem: "How can robots make traditional arts accessible to students?" },
+      { id: "06", title: "Costumes & Performing Arts", focus: "The 54 Ethnic Groups of Vietnam", problem: "How can robots present Vietnam's diverse cultural costumes?" },
+      { id: "07", title: "Custom Theme (Propose your own)", focus: "Creative Freedom", problem: "Define your own problem statement!" }
+    ];
+    // Smart image grid - object-contain to never crop any part of image
+    const SmartImageGrid = ({ images, clickable = true }) => {
+      if (!images || images.length === 0) return null;
+      const n = images.length;
+      // ImgBox: fixed-height container with object-contain so full image always visible
+      const ImgBox = ({ url, height = '220px', bg = '#f1f5f9' }) => {
+        const img = <img src={url} alt="photo" 
+          style={{width:'100%', height:height, objectFit:'contain', objectPosition:'center', background:bg, borderRadius:'8px', display:'block'}}
+          className="hover:opacity-95 transition-all duration-200 cursor-zoom-in"
+          onError={e => { e.target.style.display='none'; }} />;
+        return clickable 
+          ? <a href={url} target="_blank" rel="noreferrer" style={{display:'block', borderRadius:'8px', overflow:'hidden', background:bg}}>{img}</a>
+          : <div style={{borderRadius:'8px', overflow:'hidden', background:bg}}>{img}</div>;
+      };
+      if (n === 1) return (
+        <div style={{marginBottom:'12px'}}>
+          <ImgBox url={images[0]} height="280px" />
         </div>
-    </div>
+      );
+      if (n === 2) return (
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px', marginBottom:'12px'}}>
+          {images.map((url, i) => <ImgBox key={i} url={url} height="200px" />)}
+        </div>
+      );
+      if (n === 3) return (
+        <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:'6px', marginBottom:'12px'}}>
+          <div style={{gridRow:'1/3'}}><ImgBox url={images[0]} height="280px" /></div>
+          <ImgBox url={images[1]} height="137px" />
+          <ImgBox url={images[2]} height="137px" />
+        </div>
+      );
+      if (n === 4) return (
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px', marginBottom:'12px'}}>
+          {images.map((url, i) => <ImgBox key={i} url={url} height="150px" />)}
+        </div>
+      );
+      return (
+        <div style={{marginBottom:'12px'}}>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'5px', marginBottom:'4px'}}>
+            {images.slice(0, 6).map((url, i) => <ImgBox key={i} url={url} height="100px" />)}
+          </div>
+          {images.length > 6 && <div style={{fontSize:'11px', color:'#94a3b8', textAlign:'right'}}>+{images.length - 6} more photos</div>}
+        </div>
+      );
+    };
+    // A4 Page component - simulates a physical notebook page
+    const A4Page = ({ log, pageNum, totalPages, teamData, currentStudent }) => {
+      const images = log.imageUrls || [];
+      const ts = log.timestamp ? new Date(log.timestamp) : null;
+      const dateStr = ts ? ts.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : '';
+      const timeStr = ts ? ts.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) : '';
+      const teamNum = log.teamId || currentStudent?.team;
+      // Cool-tone themes per team (not too bright)
+      const TEAM_THEMES = {
+        1: { accent: '#1e3a5f', light: '#dbeafe', text: '#1e3a5f', name: 'Ocean Blue' },      // deep navy blue
+        2: { accent: '#134e4a', light: '#ccfbf1', text: '#134e4a', name: 'Deep Teal' },       // dark teal
+        3: { accent: '#312e5a', light: '#ede9fe', text: '#312e5a', name: 'Midnight Indigo' }, // deep indigo/slate
+        4: { accent: '#374151', light: '#f3f4f6', text: '#374151', name: 'Charcoal Steel' },  // dark charcoal gray
+      };
+      const theme = TEAM_THEMES[teamNum] || TEAM_THEMES[1];
+      const accentColor = theme.accent;
 
-    <iframe 
-        id="app-frame" 
-        src="ĐIỀN_LINK_DEPLOY_APPS_SCRIPT_CỦA_BẠN_VÀO_ĐÂY" 
-        allow="geolocation; microphone; camera; midi; encrypted-media;"
-        sandbox="allow-layouts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
-    </iframe>
+      return (
+        <div className="a4-page" id={"page-" + pageNum}>
+          {/* Binding strip - 2.5cm left margin for book spine */}
+          <div className="a4-binding-strip"></div>
+          {/* Page header decoration */}
+          <div style={{background: 'linear-gradient(135deg, ' + accentColor + ' 0%, ' + (()=>{const t={1:'#2d6ca3',2:'#1d8a80',3:'#6b68ab',4:'#6b7280'};return t[teamNum]||'#2d6ca3';})() + ' 100%)', padding:'16px 20px 14px', marginLeft:'-25mm', paddingLeft:'calc(25mm + 20px)', position:'relative', overflow:'hidden'}}>
+            <div style={{position:'absolute', top:'-20px', right:'-20px', width:'80px', height:'80px', borderRadius:'50%', background:'rgba(255,255,255,0.1)'}}></div>
+            <div style={{position:'absolute', top:'5px', right:'60px', fontSize:'40px', opacity:'0.15'}}>⚙️</div>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start'}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:'10px', fontWeight:'700', color:'rgba(255,255,255,0.7)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:'4px'}}>Team {teamNum} Research Notebook</div>
+                <h2 style={{fontSize:'18px', fontWeight:'900', color:'white', lineHeight:'1.3', margin:0}}>{log.title || 'Untitled Note'}</h2>
+              </div>
+              <div style={{textAlign:'right', color:'rgba(255,255,255,0.8)', fontSize:'11px', marginLeft:'12px', flexShrink:0}}>
+                <div style={{fontWeight:'700'}}>{dateStr}</div>
+                <div>{timeStr}</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Page content */}
+          <div style={{padding:'16px 20px 40px 18px', position:'relative'}}>
+            {/* Meta info row */}
+            <div style={{display:'flex', flexWrap:'wrap', gap:'12px', marginBottom:'14px', fontSize:'12px', color:'#64748b'}}>
+              {log.location && <span style={{display:'flex', alignItems:'center', gap:'4px'}}>📍 {log.location}</span>}
+              {log.participants && <span style={{display:'flex', alignItems:'center', gap:'4px'}}>👥 {log.participants}</span>}
+              {log.author && <span style={{display:'flex', alignItems:'center', gap:'4px'}}>✍️ {log.author}</span>}
+            </div>
 
-    <script>
-        const iframe = document.getElementById('app-frame');
-        const loader = document.getElementById('loader');
+            {/* Smart image grid */}
+            {images.length > 0 && <SmartImageGrid images={images} />}
 
-        // Khi iframe tải xong hoàn toàn dữ liệu, ẩn màn hình Loading đi
-        iframe.addEventListener('load', function() {
-            loader.classList.add('hidden');
+            {/* Activity description */}
+            {log.content && (
+              <div style={{marginBottom:'14px', padding:'12px', background:'#f8fafc', borderRadius:'8px', borderLeft:'3px solid ' + accentColor}}>
+                <p style={{fontSize:'13px', color:'#334155', lineHeight:'1.65', margin:0, whiteSpace:'pre-wrap'}}>{log.content}</p>
+              </div>
+            )}
+
+            {/* Work details */}
+            {(log.workDone || log.robotPart || log.codeFeature || log.testResult) && (
+              <div style={{marginBottom:'12px', padding:'12px', background:'#fffbeb', borderRadius:'8px', borderLeft:'3px solid #f59e0b'}}>
+                <div style={{fontSize:'10px', fontWeight:'800', color:'#92400e', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'8px'}}>📝 Work Details</div>
+                {log.workDone && <p style={{fontSize:'12px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Done:</strong> {log.workDone}</p>}
+                {log.robotPart && <p style={{fontSize:'12px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Robot Parts:</strong> {log.robotPart}</p>}
+                {log.codeFeature && <p style={{fontSize:'12px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Code:</strong> {log.codeFeature}</p>}
+                {log.testResult && <p style={{fontSize:'12px', color:'#78350f', margin:0}}><strong>Test:</strong> {log.testResult}</p>}
+              </div>
+            )}
+
+            {/* Progress & Plan */}
+            {(log.progressStatus || log.nextPlan) && (
+              <div style={{marginBottom:'12px', padding:'12px', background:'#eff6ff', borderRadius:'8px', borderLeft:'3px solid #3b82f6'}}>
+                <div style={{fontSize:'10px', fontWeight:'800', color:'#1e40af', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'8px'}}>🚀 Progress & Plan</div>
+                {log.progressStatus && <p style={{fontSize:'12px', color:'#1e3a8a', margin:'0 0 4px 0'}}><strong>Current Progress:</strong> {log.progressStatus}</p>}
+                {log.nextPlan && <p style={{fontSize:'12px', color:'#1e3a8a', margin:0}}><strong>Next Session Plan:</strong> {log.nextPlan}</p>}
+              </div>
+            )}
+
+            {/* Member notes */}
+            {log.memberNotes && (
+              <div style={{marginBottom:'12px', padding:'12px', background:'#fdf2f8', borderRadius:'8px', borderLeft:'3px solid #ec4899'}}>
+                <div style={{fontSize:'10px', fontWeight:'800', color:'#9d174d', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'6px'}}>📌 Notes</div>
+                <p style={{fontSize:'12px', color:'#831843', margin:0}}>{log.memberNotes}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Page number */}
+          <div className="page-number-badge">Page {pageNum} of {totalPages}</div>
+          
+          {/* Corner decoration */}
+          <div style={{position:'absolute', top:0, right:0, width:0, height:0, borderStyle:'solid', borderWidth:'0 28px 28px 0', borderColor:'transparent rgba(255,255,255,0.3) transparent transparent'}}></div>
+        </div>
+      );
+    };
+
+    // Cover page for the notebook
+    const CoverPage = ({ teamData, teamNum }) => (
+      <div className="a4-page" style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background: ({1:'linear-gradient(145deg,#0d1b2a,#1e3a5f,#2d5986)', 2:'linear-gradient(145deg,#042f2e,#134e4a,#1a6b64)', 3:'linear-gradient(145deg,#1a1833,#312e5a,#4a4580)', 4:'linear-gradient(145deg,#111827,#1f2937,#374151)'})[teamNum] || 'linear-gradient(145deg,#0d1b2a,#1e3a5f,#2d5986)'}}>
+        <div style={{textAlign:'center', color:'white', padding:'40px'}}>
+          <div style={{fontSize:'80px', marginBottom:'20px'}}>🤖</div>
+          <div style={{fontSize:'13px', fontWeight:'700', letterSpacing:'3px', textTransform:'uppercase', color:'rgba(199,210,254,0.8)', marginBottom:'12px'}}>Digital Research Notebook</div>
+          <h1 style={{fontSize:'36px', fontWeight:'900', lineHeight:'1.2', marginBottom:'16px', background:'linear-gradient(135deg, #a5b4fc, #e0e7ff)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent'}}>Robots Meet Culture</h1>
+          <div style={{width:'60px', height:'3px', background:'rgba(199,210,254,0.5)', margin:'0 auto 20px'}}></div>
+          <div style={{fontSize:'16px', fontWeight:'700', color:'rgba(199,210,254,0.9)', marginBottom:'8px'}}>Team {teamNum}</div>
+          <div style={{fontSize:'13px', color:'rgba(199,210,254,0.6)'}}>WRO 2026</div>
+          <div style={{marginTop:'60px', fontSize:'12px', color:'rgba(199,210,254,0.4)', fontStyle:'italic'}}>
+            {(teamData?.logs?.length || 0)} journal entries recorded
+          </div>
+        </div>
+        <div style={{position:'absolute', bottom:20, left:'50%', transform:'translateX(-50%)', fontSize:'11px', color:'rgba(199,210,254,0.4)'}}>Page 1 of {(teamData?.logs?.length || 0) + 1}</div>
+      </div>
+    );
+    // Book View with page flip navigation
+    const BookView = ({ logs, teamData, currentStudent, onClose }) => {
+      const [currentPage, setCurrentPage] = useState(0); // 0 = cover
+      const [animDir, setAnimDir] = useState('right');
+      const sortedLogs = [...(logs || [])].sort((a, b) => a.id - b.id);
+      const totalPages = sortedLogs.length + 1; // +1 for cover
+
+      const goNext = () => {
+        if (currentPage < totalPages - 1) {
+          setAnimDir('right');
+          setCurrentPage(p => p + 1);
+        }
+      };
+      const goPrev = () => {
+        if (currentPage > 0) {
+          setAnimDir('left');
+          setCurrentPage(p => p - 1);
+        }
+      };
+      const teamNum = currentStudent?.team || 1;
+
+      return (
+        <div style={{position:'fixed', inset:0, background:'rgba(15,23,42,0.92)', zIndex:1000, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'flex-start', overflowY:'auto', padding:'20px 16px 40px'}}>
+          {/* Book toolbar */}
+          <div className="no-print" style={{width:'100%', maxWidth:'794px', display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'16px', background:'rgba(30,27,75,0.8)', borderRadius:'12px', padding:'10px 16px', backdropFilter:'blur(8px)'}}>
+            <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+              <span style={{fontSize:'20px'}}>📖</span>
+              <span style={{color:'#c7d2fe', fontWeight:'700', fontSize:'14px'}}>Team {teamNum} · Research Notebook</span>
+            </div>
+            <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
+              <button onClick={() => window.print()} style={{display:'flex', alignItems:'center', gap:'6px', background:'rgba(99,102,241,0.3)', color:'#c7d2fe', border:'1px solid rgba(99,102,241,0.4)', borderRadius:'8px', padding:'6px 12px', cursor:'pointer', fontSize:'13px', fontWeight:'600'}}>
+                <IconPrinter /><span>Print</span>
+              </button>
+              <button onClick={onClose} style={{background:'rgba(239,68,68,0.2)', color:'#fca5a5', border:'1px solid rgba(239,68,68,0.3)', borderRadius:'8px', padding:'6px 14px', cursor:'pointer', fontSize:'13px', fontWeight:'700'}}>✕ Close</button>
+            </div>
+          </div>
+
+          {/* Page display */}
+          <div key={currentPage} className={"page-flip-enter"} style={{width:'100%', maxWidth:'794px', position:'relative'}}>
+            {currentPage === 0 
+              ? <CoverPage teamData={teamData} teamNum={teamNum} />
+              : <A4Page log={sortedLogs[currentPage - 1]} pageNum={currentPage + 1} totalPages={totalPages} teamData={teamData} currentStudent={currentStudent} />
+            }
+          </div>
+
+          {/* Navigation */}
+          <div className="no-print" style={{display:'flex', alignItems:'center', gap:'16px', marginTop:'20px', padding:'10px 20px', background:'rgba(30,27,75,0.8)', borderRadius:'40px', backdropFilter:'blur(8px)'}}>
+            <button onClick={goPrev} disabled={currentPage === 0} style={{display:'flex', alignItems:'center', justifyContent:'center', width:'44px', height:'44px', borderRadius:'50%', background: currentPage === 0 ? 'rgba(99,102,241,0.1)' : 'rgba(99,102,241,0.4)', color: currentPage === 0 ? '#4338ca' : '#e0e7ff', border:'none', cursor: currentPage === 0 ? 'not-allowed' : 'pointer', transition:'all 0.2s'}}>
+              <IconChevronLeft />
+            </button>
+            <div style={{display:'flex', gap:'6px', alignItems:'center'}}>
+              {Array.from({length: totalPages}).map((_, i) => (
+                <button key={i} onClick={() => { setAnimDir(i > currentPage ? 'right' : 'left'); setCurrentPage(i); }}
+                  style={{width: i === currentPage ? '24px' : '8px', height:'8px', borderRadius:'4px', border:'none', cursor:'pointer', transition:'all 0.3s',
+                    background: i === currentPage ? '#818cf8' : 'rgba(129,140,248,0.3)'}} />
+              ))}
+            </div>
+            <button onClick={goNext} disabled={currentPage === totalPages - 1} style={{display:'flex', alignItems:'center', justifyContent:'center', width:'44px', height:'44px', borderRadius:'50%', background: currentPage === totalPages - 1 ? 'rgba(99,102,241,0.1)' : 'rgba(99,102,241,0.4)', color: currentPage === totalPages - 1 ? '#4338ca' : '#e0e7ff', border:'none', cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer', transition:'all 0.2s'}}>
+              <IconChevronRight />
+            </button>
+          </div>
+          <div className="no-print" style={{color:'rgba(148,163,184,0.6)', fontSize:'12px', marginTop:'8px'}}>
+            {currentPage === 0 ? 'Cover' : 'Page ' + (currentPage + 1)} of {totalPages} · Use arrows or dots to navigate
+          </div>
+        </div>
+      );
+    };
+    // =================== MAIN APP ===================
+    // ===================== TEAM SCHEDULER COMPONENT =====================
+    const TEAM_COLORS = {
+      1: { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af', dot: '#3b82f6' },
+      2: { bg: '#d1fae5', border: '#10b981', text: '#065f46', dot: '#10b981' },
+      3: { bg: '#fef3c7', border: '#f59e0b', text: '#92400e', dot: '#f59e0b' },
+      4: { bg: '#fee2e2', border: '#ef4444', text: '#991b1b', dot: '#ef4444' },
+      5: { bg: '#f3e8ff', border: '#a855f7', text: '#6b21a8', dot: '#a855f7' },
+    };
+    const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri'];
+    const SHIFTS = [
+      { key: 'lunch',     label: 'Lunch',     time: '12:30-13:00', maxTeams: 2 },
+      { key: 'afternoon', label: 'Afternoon', time: '15:00-16:30', maxTeams: 3 },
+    ];
+    const NUM_TEAMS = 5;
+
+    function getMondayOfWeek(offset) {
+      const today = new Date();
+      const day = today.getDay();
+      const diff = (day === 0 ? -6 : 1 - day);
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + diff + offset * 7);
+      monday.setHours(0,0,0,0);
+      return monday;
+    }
+    function formatDateSlash(d) { return (d.getMonth()+1) + '/' + d.getDate(); }
+    function getWeekKey(offset) {
+      const mon = getMondayOfWeek(offset);
+      return mon.getFullYear() + '-' + String(mon.getMonth()+1).padStart(2,'0') + '-' + String(mon.getDate()).padStart(2,'0');
+    }
+
+    const TeamScheduler = ({ students, currentStudent }) => {
+      const [weekOffset,  setWeekOffset]  = React.useState(0);
+      // allSlots = full server data: { weekKey: { dayIdx: { lunch:[...], afternoon:[...] } } }
+      const [allSlots,    setAllSlots]    = React.useState({});
+      const [loading,     setLoading]     = React.useState(false);
+      const [addingFor,   setAddingFor]   = React.useState(null);
+
+      const isCoach  = currentStudent && currentStudent.role === 'coach';
+      const myTeamId = currentStudent ? currentStudent.team : null;
+      const canManage = (tid) => isCoach || tid === myTeamId;
+
+      const weekKey = getWeekKey(weekOffset);
+      const monday  = getMondayOfWeek(weekOffset);
+      const days    = DAY_NAMES.map((name, i) => {
+        const d = new Date(monday); d.setDate(monday.getDate() + i); return { name, date: d };
+      });
+      const today = new Date(); today.setHours(0,0,0,0);
+      const isCurrentWeek = weekOffset === 0;
+      const isToday = (d) => d.getTime() === today.getTime();
+      const teamList = Array.from({length: NUM_TEAMS}, (_,i) => i+1);
+
+      const fmt = (d) => {
+        const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return M[d.getMonth()] + ' ' + d.getDate();
+      };
+
+      // ---- Load from server ----
+      const loadSchedule = () => {
+        if (typeof google === 'undefined' || !google.script) return;
+        setLoading(true);
+        google.script.run
+          .withSuccessHandler((json) => {
+            try { setAllSlots(JSON.parse(json) || {}); } catch(e) { setAllSlots({}); }
+            setLoading(false);
+          })
+          .withFailureHandler(() => setLoading(false))
+          .getScheduleData();
+      };
+
+      React.useEffect(() => { loadSchedule(); }, [weekOffset]);
+
+      const currentSlots = allSlots[weekKey] || {};
+      const getSlot = (dayIdx, shiftKey) => {
+        const s = currentSlots[dayIdx] && currentSlots[dayIdx][shiftKey];
+        return s ? s.map(Number) : [];
+      };
+
+      // ---- Save to server then reload ----
+      const mutateSlot = (dayIdx, shiftKey, teamId, action) => {
+        if (typeof google === 'undefined' || !google.script) {
+          // Offline fallback (dev mode)
+          setAllSlots(prev => {
+            const wk  = { ...(prev[weekKey] || {}) };
+            const day = { ...(wk[dayIdx] || {}) };
+            let slot  = [...(day[shiftKey] || [])];
+            if (action === 'add' && !slot.includes(teamId)) slot.push(teamId);
+            if (action === 'remove') slot = slot.filter(t => t !== teamId);
+            day[shiftKey] = slot; wk[dayIdx] = day;
+            return { ...prev, [weekKey]: wk };
+          });
+          return;
+        }
+        setLoading(true);
+        google.script.run
+          .withSuccessHandler((json) => {
+            try { setAllSlots(JSON.parse(json) || {}); } catch(e) {}
+            setLoading(false);
+          })
+          .withFailureHandler(() => setLoading(false))
+          .saveScheduleSlot(JSON.stringify({
+            weekKey, dayIdx, shiftKey, teamId, action,
+            bookedBy: currentStudent ? currentStudent.name : 'Unknown'
+          }));
+      };
+
+      const addTeam = (dayIdx, shiftKey, teamId) => {
+        if (!canManage(teamId)) return;
+        mutateSlot(dayIdx, shiftKey, teamId, 'add');
+        setAddingFor(null);
+        // Also send email
+        if (typeof google !== 'undefined' && google.script) {
+          const shiftObj  = SHIFTS.find(s => s.key === shiftKey);
+          const weekLabel = fmt(days[0].date) + ' - ' + fmt(days[4].date);
+          google.script.run.sendScheduleEmail(JSON.stringify({
+            teamId, dayName: days[dayIdx].name + ' ' + formatDateSlash(days[dayIdx].date),
+            shiftLabel: shiftObj ? shiftObj.label : shiftKey,
+            weekLabel,
+            bookedBy: currentStudent ? currentStudent.name : 'Unknown'
+          }));
+        }
+      };
+
+      const removeTeam = (dayIdx, shiftKey, teamId) => {
+        if (!canManage(teamId)) return;
+        mutateSlot(dayIdx, shiftKey, teamId, 'remove');
+      };
+
+      return (
+        <div style={{background:'white', borderRadius:'14px', border:'1px solid #e2e8f0', overflow:'hidden', boxShadow:'0 2px 8px rgba(0,0,0,0.07)'}}>
+
+          {/* Rules bar */}
+          <div style={{background:'#1e1b4b', color:'#c7d2fe', fontSize:'12px', fontWeight:'600', padding:'8px 16px', display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap'}}>
+            <span>Rules: <strong>Lunch max 2 teams</strong> · <strong>Afternoon max 3 teams</strong> per slot</span>
+            <span style={{opacity:0.5}}>·</span>
+            <span>Absence: report ASAP</span>
+            <span style={{opacity:0.5}}>·</span>
+            <span>Need more slots: contact teacher</span>
+            {loading && <span style={{marginLeft:'auto', fontSize:'11px', opacity:0.7}}>⏳ Syncing...</span>}
+          </div>
+
+          {/* Week navigation */}
+          <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 16px', borderBottom:'1px solid #f1f5f9'}}>
+            <button onClick={() => setWeekOffset(w => w-1)} style={{padding:'6px 14px', borderRadius:'8px', border:'1px solid #e2e8f0', background:'white', cursor:'pointer', fontWeight:'700', fontSize:'13px'}}>‹ Prev</button>
+            <div style={{textAlign:'center'}}>
+              <div style={{fontWeight:'800', fontSize:'15px', color:'#1e293b'}}>Week of {fmt(days[0].date)} – {fmt(days[4].date)}</div>
+              {isCurrentWeek && <div style={{fontSize:'11px', color:'#6366f1', fontWeight:'600'}}>( This week )</div>}
+            </div>
+            <div style={{display:'flex', gap:'8px'}}>
+              {!isCurrentWeek && (
+                <button onClick={() => setWeekOffset(0)} style={{padding:'6px 14px', borderRadius:'8px', border:'none', background:'#6366f1', color:'white', cursor:'pointer', fontWeight:'700', fontSize:'13px'}}>Today</button>
+              )}
+              <button onClick={() => setWeekOffset(w => w+1)} style={{padding:'6px 14px', borderRadius:'8px', border:'1px solid #e2e8f0', background:'white', cursor:'pointer', fontWeight:'700', fontSize:'13px'}}>Next ›</button>
+            </div>
+          </div>
+
+          {/* Grid */}
+          <div style={{overflowX:'auto'}}>
+            <table style={{width:'100%', borderCollapse:'collapse', minWidth:'540px'}}>
+              <thead>
+                <tr>
+                  <th style={{width:'100px', padding:'10px 12px', fontSize:'12px', fontWeight:'700', color:'#64748b', textAlign:'left', background:'#f8fafc', borderBottom:'1px solid #e2e8f0'}}></th>
+                  {days.map((d, i) => (
+                    <th key={i} style={{padding:'10px 8px', fontSize:'13px', fontWeight:'800', color: isToday(d.date) ? '#7c3aed' : '#334155', textAlign:'center', background: isToday(d.date) ? '#f5f3ff' : '#f8fafc', borderBottom:'1px solid #e2e8f0', borderLeft:'1px solid #f1f5f9'}}>
+                      <div>{d.name}</div>
+                      <div style={{fontSize:'11px', fontWeight:'600', color: isToday(d.date) ? '#7c3aed' : '#94a3b8', marginTop:'2px'}}>{formatDateSlash(d.date)}</div>
+                      {isToday(d.date) && <div style={{width:'6px',height:'6px',background:'#7c3aed',borderRadius:'50%',margin:'3px auto 0'}}></div>}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {SHIFTS.map((shift) => (
+                  <tr key={shift.key}>
+                    <td style={{padding:'10px 12px', fontSize:'12px', fontWeight:'700', color:'#475569', background:'#f8fafc', borderRight:'1px solid #e2e8f0', borderTop:'1px solid #f1f5f9', whiteSpace:'nowrap'}}>
+                      <div style={{display:'flex', alignItems:'center', gap:'6px'}}>
+                        <span>{shift.label}</span>
+                        <span style={{fontSize:'10px', background:'#e0e7ff', color:'#4338ca', borderRadius:'4px', padding:'1px 5px', fontWeight:'700'}}>max {shift.maxTeams}</span>
+                      </div>
+                      <div style={{fontSize:'10px', color:'#94a3b8', fontWeight:'500', marginTop:'2px'}}>{shift.time}</div>
+                    </td>
+                    {days.map((d, dayIdx) => {
+                      const teams    = getSlot(dayIdx, shift.key);
+                      const isFull   = teams.length >= shift.maxTeams;
+                      const isActive = addingFor && addingFor.dayIdx === dayIdx && addingFor.shiftKey === shift.key;
+                      const addable  = teamList.filter(tid => !teams.includes(tid) && canManage(tid));
+                      const canShowAdd = addable.length > 0 && !isFull && !loading;
+                      return (
+                        <td key={dayIdx} style={{padding:'8px', verticalAlign:'top', background: isToday(d.date) ? '#faf8ff' : 'white', borderLeft:'1px solid #f1f5f9', borderTop:'1px solid #f1f5f9', minWidth:'110px'}}>
+                          {teams.map(tid => {
+                            const c = TEAM_COLORS[tid] || TEAM_COLORS[1];
+                            return (
+                              <div key={tid} style={{display:'flex', alignItems:'center', justifyContent:'space-between', background:c.bg, border:'1px solid '+c.border, borderRadius:'8px', padding:'4px 8px', marginBottom:'4px', fontSize:'12px', fontWeight:'700', color:c.text}}>
+                                <span>Team {tid}</span>
+                                {canManage(tid) && !loading && (
+                                  <button onClick={() => removeTeam(dayIdx, shift.key, tid)} style={{marginLeft:'6px', background:'none', border:'none', cursor:'pointer', color:c.text, fontSize:'13px', lineHeight:'1', padding:'0 2px', opacity:0.7}}>×</button>
+                                )}
+                              </div>
+                            );
+                          })}
+                          {isFull && <div style={{fontSize:'10px', color:'#94a3b8', fontStyle:'italic', textAlign:'center', padding:'2px 0'}}>Full</div>}
+                          {!isActive && canShowAdd && (
+                            <button onClick={() => setAddingFor({dayIdx, shiftKey: shift.key})}
+                              style={{width:'100%', padding:'5px', borderRadius:'8px', border:'1.5px dashed #cbd5e1', background:'transparent', cursor:'pointer', fontSize:'12px', color:'#94a3b8', fontWeight:'600', marginTop: teams.length > 0 ? '2px' : '0'}}>+ Add</button>
+                          )}
+                          {isActive && (
+                            <div style={{background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'8px', padding:'6px', marginTop: teams.length > 0 ? '2px' : '0'}}>
+                              <div style={{fontSize:'10px', color:'#64748b', fontWeight:'600', marginBottom:'4px'}}>Pick your team:</div>
+                              <div style={{display:'flex', flexWrap:'wrap', gap:'4px', marginBottom:'4px'}}>
+                                {addable.map(tid => {
+                                  const c = TEAM_COLORS[tid] || TEAM_COLORS[1];
+                                  return (
+                                    <button key={tid} onClick={() => addTeam(dayIdx, shift.key, tid)}
+                                      style={{padding:'3px 8px', borderRadius:'6px', border:'1px solid '+c.border, background:c.bg, color:c.text, cursor:'pointer', fontSize:'11px', fontWeight:'700'}}>
+                                      Team {tid}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                              <button onClick={() => setAddingFor(null)} style={{fontSize:'10px', color:'#94a3b8', background:'none', border:'none', cursor:'pointer'}}>Cancel</button>
+                            </div>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Team legend */}
+          <div style={{padding:'10px 16px', borderTop:'1px solid #f1f5f9', display:'flex', flexWrap:'wrap', gap:'12px', alignItems:'center'}}>
+            {teamList.map(tid => {
+              const c = TEAM_COLORS[tid] || TEAM_COLORS[1];
+              return (
+                <span key={tid} style={{display:'flex', alignItems:'center', gap:'5px', fontSize:'12px', fontWeight:'600', color:'#475569'}}>
+                  <span style={{width:'10px', height:'10px', borderRadius:'50%', background:c.dot, display:'inline-block'}}></span>
+                  Team {tid}
+                </span>
+              );
+            })}
+            <span style={{marginLeft:'auto', fontSize:'11px', color:'#94a3b8', cursor:'pointer'}} onClick={loadSchedule}>🔄 Refresh</span>
+          </div>
+        </div>
+      );
+    };
+    // ===================== END TEAM SCHEDULER COMPONENT =====================
+    // ===================== END TEAM SCHEDULER COMPONENT =====================
+    // ===================== END TEAM SCHEDULER COMPONENT =====================
+
+    function App() {
+      const [students, setStudents] = useState([]);
+      const [isLoadingInit, setIsLoadingInit] = useState(true);
+      const [initError, setInitError] = useState(null);
+      const [selectedStudentId, setSelectedStudentId] = useState("");
+      const [enteredPin, setEnteredPin] = useState("");
+      const [isUnlocked, setIsUnlocked] = useState(false);
+      const [loginError, setLoginError] = useState("");
+      const [teamData, setTeamData] = useState({ logs:[], pitches:[], ideaPosts:[] });
+      const [activeTab, setActiveTab] = useState("journal");
+      const [activeTeamId, setActiveTeamId] = useState(1);
+      const [viewingTeamId, setViewingTeamId] = useState(1);
+      const [editingThemeId, setEditingThemeId] = useState("");
+      const [customFocus, setCustomFocus] = useState("");
+      const [formData, setFormData] = useState({ q1:"", q2:"", q3:"", notes:"" });
+      const [newLog, setNewLog] = useState({ title:"", content:"", location:"", participants:[], imagesBase64:[], workDone:"", robotPart:"", codeFeature:"", testResult:"", progressStatus:"", nextPlan:"", memberNotes:"" });
+      const [uploadStatus, setUploadStatus] = useState("");
+      const [uploadProgress, setUploadProgress] = useState(0);
+      const [commentInputs, setCommentInputs] = useState({});
+      const [expandedAnswers, setExpandedAnswers] = useState({});
+      const [expandedPosts, setExpandedPosts] = useState({});
+      const [newIdeaPost, setNewIdeaPost] = useState({ content:"", imagesBase64:[] });
+      const [ideaUploadStatus, setIdeaUploadStatus] = useState("");
+      const [postCommentInputs, setPostCommentInputs] = useState({});
+      const [showBookView, setShowBookView] = useState(false);
+      const [journalViewMode, setJournalViewMode] = useState("list"); // "list" or "book"
+      const STUDENTS = students;
+      const currentStudent = STUDENTS.find(s => s.id === selectedStudentId) || null;
+      const editingTheme = THEMES.find(t => t.id === editingThemeId) || null;
+      const toggleAnswer = (key) => setExpandedAnswers(prev => ({...prev, [key]: !prev[key]}));
+      const togglePost = (id) => setExpandedPosts(prev => ({...prev, [id]: !prev[id]}));
+
+      useEffect(() => {
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run
+            .withSuccessHandler((res) => {
+              const data = JSON.parse(res);
+              setStudents(data.students || []);
+              setIsLoadingInit(false);
+            })
+            .withFailureHandler((err) => {
+              setInitError(err.message);
+              setIsLoadingInit(false);
+            }).getInitialData();
+        } else {
+          setInitError("Not in Google Apps Script environment.");
+          setIsLoadingInit(false);
+        }
+      }, []);
+
+      const fetchTeamData = (tid) => {
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run
+            .withSuccessHandler((data) => {
+              if(data) setTeamData(JSON.parse(data));
+            }).getTeamData(tid);
+        }
+      };
+
+      useEffect(() => {
+        if (isUnlocked && currentStudent) {
+          setActiveTeamId(currentStudent.team || 1);
+          if (currentStudent.role === 'coach') setActiveTab("team");
+          else setActiveTab("journal");
+          fetchTeamData(activeTeamId);
+        }
+      }, [isUnlocked, currentStudent, activeTeamId]);
+
+      useEffect(() => {
+        if (!currentStudent || !editingThemeId) { setFormData({ q1:"", q2:"", q3:"", notes:"" }); return; }
+        var existing = (teamData.pitches || []).find(function(p) { return p.roleId === currentStudent.role && p.themeId === editingThemeId; });
+        if (existing && existing.answers) {
+          setFormData({ q1: existing.answers.q1||"", q2: existing.answers.q2||"", q3: existing.answers.q3||"", notes: existing.answers.notes||"" });
+        } else { setFormData({ q1:"", q2:"", q3:"", notes:"" }); }
+      }, [currentStudent && currentStudent.id, editingThemeId]);
+
+      useEffect(() => {
+        if (!isUnlocked) {
+          setEditingThemeId(""); setCustomFocus(""); setFormData({ q1:"", q2:"", q3:"", notes:"" });
+          setEnteredPin(""); setCommentInputs({}); setPostCommentInputs({});
+          setNewIdeaPost({ content:"", imagesBase64:[] });
+          setNewLog({ title:"", content:"", location:"", participants:[], imagesBase64:[], workDone:"", robotPart:"", codeFeature:"", testResult:"", progressStatus:"", nextPlan:"", memberNotes:"" });
+          setSelectedStudentId(""); setShowBookView(false);
+        }
+      }, [isUnlocked]);
+
+      const TEAM_PINS = { 1: "1111", 2: "1211", 3: "1131", 4: "1114" };
+      const handleUnlock = () => {
+        if (!currentStudent) return setLoginError("Please select your name.");
+        if (currentStudent.role === 'coach') { setIsUnlocked(true); setLoginError(""); return; }
+        const expectedPin = TEAM_PINS[currentStudent.team] || "1111";
+        if (enteredPin === expectedPin) { setIsUnlocked(true); setLoginError(""); }
+        else { setLoginError("Incorrect PIN!"); }
+      };
+
+      const handleSavePitch = () => {
+        if (!currentStudent || !editingTheme) return;
+        const payload = {
+          teamId: currentStudent.team, roleId: currentStudent.role, studentName: currentStudent.name,
+          themeId: editingTheme.id, themeTitle: editingTheme.id === "07" ? "Custom Theme" : editingTheme.title,
+          customFocus: editingTheme.id === "07" ? customFocus : editingTheme.focus, answers: formData
+        };
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run.withSuccessHandler((data) => {
+            setTeamData(JSON.parse(data)); alert("Saved to Ideation Board!");
+          }).savePitch(JSON.stringify(payload));
+        }
+      };
+
+      const handleVote = (targetRoleId) => {
+        if (!currentStudent) return;
+        const payload = { teamId: activeTeamId, voterName: currentStudent.name, targetRoleId };
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run.withSuccessHandler((data) => { setTeamData(JSON.parse(data)); }).voteForPitch(JSON.stringify(payload));
+        }
+      };
+
+      const handleAddComment = (targetRoleId) => {
+        const text = commentInputs[targetRoleId];
+        if (!text || !currentStudent) return;
+        const payload = { teamId: activeTeamId, author: currentStudent.name, targetRoleId, text };
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run.withSuccessHandler((data) => {
+            setTeamData(JSON.parse(data)); setCommentInputs({...commentInputs, [targetRoleId]: ""});
+          }).addComment(JSON.stringify(payload));
+        }
+      };
+
+      const processImageFile = (file) => new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            const MAX = 1200;
+            let w = img.width, h = img.height;
+            if (w > MAX || h > MAX) { if (w > h) { h = Math.round(h * MAX / w); w = MAX; } else { w = Math.round(w * MAX / h); h = MAX; } }
+            const canvas = document.createElement("canvas");
+            canvas.width = w; canvas.height = h;
+            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", 0.75));
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const handleIdeaImageUpload = (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length) return;
+        if (newIdeaPost.imagesBase64.length + files.length > 4) { alert("Max 4 images per post."); return; }
+        setIdeaUploadStatus("compressing");
+        Promise.all(files.map(processImageFile)).then((results) => {
+          setNewIdeaPost(prev => ({...prev, imagesBase64: [...prev.imagesBase64, ...results]}));
+          setIdeaUploadStatus("");
         });
-    </script>
+      };
+
+      const removeIdeaImage = (idx) => setNewIdeaPost(prev => ({...prev, imagesBase64: prev.imagesBase64.filter((_,i)=>i!==idx)}));
+
+      const handlePostIdea = () => {
+        if (!newIdeaPost.content && !newIdeaPost.imagesBase64.length) { alert("Please write your thoughts or attach at least one image."); return; }
+        const payload = { teamId: activeTeamId, author: currentStudent.name, content: newIdeaPost.content, imagesBase64: newIdeaPost.imagesBase64 };
+        if (typeof google !== 'undefined' && google.script) {
+          setIdeaUploadStatus("uploading");
+          google.script.run
+            .withSuccessHandler((data) => { setTeamData(JSON.parse(data)); setNewIdeaPost({ content:"", imagesBase64:[] }); setIdeaUploadStatus(""); alert("Idea posted!"); })
+            .withFailureHandler((err) => { setIdeaUploadStatus(""); alert("Post failed: " + (err&&err.message?err.message:err)); })
+            .saveIdeaPost(JSON.stringify(payload));
+        }
+      };
+
+      const handleAddPostComment = (postId) => {
+        const text = postCommentInputs[postId];
+        if (!text || !currentStudent) return;
+        const payload = { teamId: activeTeamId, postId, author: currentStudent.name, text };
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run
+            .withSuccessHandler((data) => { setTeamData(JSON.parse(data)); setPostCommentInputs({ ...postCommentInputs, [postId]: "" }); })
+            .addIdeaPostComment(JSON.stringify(payload));
+        }
+      };
+
+      const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length) return;
+        if (newLog.imagesBase64.length + files.length > 6) { alert("Max 6 images per log entry."); return; }
+        setUploadStatus("compressing");
+        Promise.all(files.map(processImageFile)).then((results) => {
+          setNewLog(prev => ({...prev, imagesBase64: [...prev.imagesBase64, ...results]}));
+          setUploadStatus("");
+        });
+      };
+
+      const removeImage = (indexToRemove) => setNewLog(prev => ({...prev, imagesBase64: prev.imagesBase64.filter((_,i)=>i!==indexToRemove)}));
+
+      const submitLog = () => {
+        if (!newLog.title || !newLog.content) return alert("Please fill in the Title and Activity details!");
+        setUploadStatus("uploading"); setUploadProgress(15);
+        const progressInterval = setInterval(() => {
+          setUploadProgress(prev => { if (prev >= 95) { clearInterval(progressInterval); return 95; } return prev + Math.floor(Math.random() * 6) + 2; });
+        }, 350);
+        const payload = {
+          teamId: activeTeamId, author: currentStudent.name, title: newLog.title,
+          content: newLog.content, location: newLog.location,
+          participants: newLog.participants.join(", ") || currentStudent.name,
+          imagesBase64: newLog.imagesBase64, workDone: newLog.workDone,
+          robotPart: newLog.robotPart, codeFeature: newLog.codeFeature,
+          testResult: newLog.testResult, progressStatus: newLog.progressStatus,
+          nextPlan: newLog.nextPlan, memberNotes: newLog.memberNotes
+        };
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run
+            .withSuccessHandler((data) => {
+              clearInterval(progressInterval); setUploadProgress(100);
+              setTimeout(() => {
+                setTeamData(JSON.parse(data));
+                setNewLog({ title:"", content:"", location:"", participants:[], imagesBase64:[], workDone:"", robotPart:"", codeFeature:"", testResult:"", progressStatus:"", nextPlan:"", memberNotes:"" });
+                setUploadStatus(""); setUploadProgress(0);
+                alert("Journal Updated Successfully!");
+              }, 500);
+            })
+            .withFailureHandler((err) => {
+              clearInterval(progressInterval); setUploadStatus(""); setUploadProgress(0);
+              alert("Upload failed: " + err.message);
+            })
+            .saveTeamLog(JSON.stringify(payload));
+        }
+      };
+      // ===== RENDER: Error =====
+      if (initError) return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl max-w-lg shadow-lg">
+            <h3 className="font-bold text-lg mb-2">⚠ System Error</h3><p>{initError}</p>
+          </div>
+        </div>
+      );
+
+      // ===== RENDER: Loading =====
+      if (isLoadingInit) return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div style={{fontSize:'48px', animation:'spin 2s linear infinite'}}>⚙️</div>
+            <p className="font-bold text-indigo-600">Loading Workspace...</p>
+          </div>
+        </div>
+      );
+
+      // ===== RENDER: Login =====
+      if (!isUnlocked) return (
+        <div className="min-h-screen flex items-center justify-center p-4" style={{background:'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a5f 100%)'}}>
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <div style={{fontSize:'56px', marginBottom:'12px'}}>🤖</div>
+              <h1 style={{fontSize:'28px', fontWeight:'900', color:'white', letterSpacing:'-0.5px'}}>Robots Meet Culture</h1>
+              <p style={{color:'rgba(199,210,254,0.7)', fontSize:'14px', marginTop:'6px'}}>WRO 2026 · Team Research Notebook</p>
+            </div>
+            <div className="bg-white rounded-2xl shadow-2xl p-8">
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">👤 Select Your Name</label>
+                  <select className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-0 font-semibold text-slate-800" 
+                    value={selectedStudentId} onChange={e => { setSelectedStudentId(e.target.value); setLoginError(""); setEnteredPin(""); }}>
+                    <option value="">-- Choose Name --</option>
+                    {STUDENTS.map(s => <option key={s.id} value={s.id}>{s.name} {s.role==='coach'?'(Admin)':''}</option>)}
+                  </select>
+                </div>
+                {currentStudent && currentStudent.role !== 'coach' && (
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">🔐 PIN Code (Team {currentStudent.team})</label>
+                    <input type="password" placeholder="Enter Team PIN (4 digits)" maxLength={4}
+                      className="w-full border-2 border-slate-200 rounded-xl text-center font-bold text-2xl tracking-widest p-3 focus:border-indigo-500 focus:ring-0"
+                      value={enteredPin} onChange={e => { setEnteredPin(e.target.value); setLoginError(""); }}
+                      onKeyDown={e => e.key === 'Enter' && handleUnlock()} />
+                  </div>
+                )}
+                {loginError && <p className="text-red-600 text-sm font-semibold text-center">⚠ {loginError}</p>}
+                <button className="w-full py-4 text-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors disabled:opacity-40"
+                  disabled={!currentStudent || (!enteredPin && currentStudent && currentStudent.role !== 'coach')} onClick={handleUnlock}>
+                  Enter Workspace →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      // ===== MAIN WORKSPACE =====
+      const journalLogs = teamData.logs || [];
+      return (
+        <>
+        {showBookView && <BookView logs={journalLogs} teamData={teamData} currentStudent={currentStudent} onClose={() => setShowBookView(false)} />}
+        <div className="min-h-screen p-4 md:p-6" style={{display: showBookView ? 'none' : 'block'}}>
+          {/* Header */}
+          <header style={{maxWidth:'1100px', margin:'0 auto 20px', background: (() => { const t = {1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'}; return t[currentStudent.team] || t[1]; })(), borderRadius:'16px', padding:'16px 24px', boxShadow:'0 4px 20px rgba(0,0,0,0.25)'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'12px'}}>
+              <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                <span style={{fontSize:'32px'}}>🤖</span>
+                <div>
+                  <h1 style={{fontSize:'22px', fontWeight:'900', color:'white', margin:0, lineHeight:'1.2'}}>Robots Meet Culture</h1>
+                  <p style={{fontSize:'12px', color:'rgba(199,210,254,0.8)', margin:0}}>WRO 2026 · Team {currentStudent.role !== 'coach' ? currentStudent.team : 'Admin'} Research Workspace</p>
+                </div>
+              </div>
+              <div style={{display:'flex', alignItems:'center', gap:'10px', flexWrap:'wrap'}}>
+                <span style={{background:'rgba(255,255,255,0.15)', color:'white', padding:'6px 14px', borderRadius:'20px', fontSize:'13px', fontWeight:'700'}}>
+                  👋 {currentStudent.name}
+                </span>
+                {currentStudent.role === 'coach' && (
+                  <select style={{padding:'6px 12px', borderRadius:'10px', border:'2px solid rgba(255,255,255,0.3)', background:'rgba(255,255,255,0.1)', color:'white', fontWeight:'700', fontSize:'13px', cursor:'pointer'}}
+                    value={viewingTeamId} onChange={e => { const t = parseInt(e.target.value); setViewingTeamId(t); setActiveTeamId(t); }}>
+                    <option value={1} style={{color:'#1e1b4b'}}>View Team 1</option>
+                    <option value={2} style={{color:'#1e1b4b'}}>View Team 2</option>
+                    <option value={3} style={{color:'#1e1b4b'}}>View Team 3</option>
+                    <option value={4} style={{color:'#1e1b4b'}}>View Team 4</option>
+                    <option value={5} style={{color:'#1e1b4b'}}>View Team 5</option>
+                    <option value={6} style={{color:'#1e1b4b'}}>View Team 6</option>
+                  </select>
+                )}
+                <button style={{background:'rgba(255,255,255,0.15)', color:'rgba(199,210,254,0.9)', border:'none', borderRadius:'8px', padding:'6px 12px', cursor:'pointer', fontSize:'13px', fontWeight:'600'}}
+                  onClick={() => setIsUnlocked(false)}>Sign Out</button>
+                {currentStudent.team && (
+                  <a href={({1:'https://drive.google.com/drive/folders/1z1CnZ9SRDR9A7Ly6zrjH95GJpeNxz5lx?usp=drive_link',2:'https://drive.google.com/drive/folders/1916SKI5SLEdOxtaoHxCkVq2k7AwL55qF?usp=drive_link',3:'https://drive.google.com/drive/folders/1X2W__Np7GJ-4Hnq7MYtk5idr8DpUOvdw?usp=drive_link',4:'https://drive.google.com/drive/folders/1y8m01hbxnY97usoSfslnxSm8gPaukaH-?usp=drive_link',5:'https://drive.google.com/drive/folders/1J5ct86WGR9k2rnxtaJNha3UvbO8RmKLp?usp=drive_link'})[currentStudent.team] || '#'} target="_blank" rel="noreferrer"
+                    style={{background:'rgba(255,255,255,0.15)', color:'white', border:'none', borderRadius:'8px', padding:'6px 12px', fontSize:'13px', fontWeight:'600', textDecoration:'none'}}>
+                    📁 Drive
+                  </a>
+                )}
+              </div>
+            </div>
+          </header>
+
+          <main style={{maxWidth:'1100px', margin:'0 auto'}}>
+            {/* Tab navigation */}
+            <div style={{display:'flex', background:'white', borderRadius:'14px', padding:'4px', marginBottom:'20px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)', border:'1px solid #e2e8f0'}}>
+              {currentStudent.role !== 'coach' && (
+                <button style={{flex:1, padding:'11px', borderRadius:'10px', fontWeight:'700', fontSize:'14px', border:'none', cursor:'pointer', transition:'all 0.2s',
+                  background: activeTab === 'draft' ? (()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'};return t[currentStudent.team]||t[1]})() : 'transparent',
+                  color: activeTab === 'draft' ? 'white' : '#64748b'}}
+                  onClick={() => setActiveTab('draft')}>🧠 Theme Selection</button>
+              )}
+              <button style={{flex:1, padding:'11px', borderRadius:'10px', fontWeight:'700', fontSize:'14px', border:'none', cursor:'pointer', transition:'all 0.2s',
+                background: activeTab === 'team' ? (()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'};return t[currentStudent.team]||t[1]})() : 'transparent',
+                color: activeTab === 'team' ? 'white' : '#64748b'}}
+                onClick={() => setActiveTab('team')}>💡 Ideation Board</button>
+              <button style={{flex:1, padding:'11px', borderRadius:'10px', fontWeight:'700', fontSize:'14px', border:'none', cursor:'pointer', transition:'all 0.2s',
+                background: activeTab === 'journal' ? (()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'};return t[currentStudent.team]||t[1]})() : 'transparent',
+                color: activeTab === 'journal' ? 'white' : '#64748b'}}
+                onClick={() => setActiveTab('journal')}>📖 Team Journal</button>
+              <button style={{flex:1, padding:'11px', borderRadius:'10px', fontWeight:'700', fontSize:'14px', border:'none', cursor:'pointer', transition:'all 0.2s',
+                background: activeTab === 'schedule' ? (()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)',5:'linear-gradient(135deg,#7c2d12,#9a3412)'}; return t[currentStudent.team]||t[1];})() : 'transparent',
+                color: activeTab === 'schedule' ? 'white' : '#64748b'}}
+                onClick={() => setActiveTab('schedule')}>📅 Schedule</button>
+            </div>
+            {/* TAB: THEME SELECTION */}
+            {activeTab === 'draft' && (
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div style={{background:'linear-gradient(135deg, #f8faff, #eef2ff)', padding:'20px 24px', borderBottom:'1px solid #e2e8f0'}}>
+                  <h2 className="text-lg font-bold flex items-center gap-2 text-indigo-900"><IconBook /> Select a Research Theme</h2>
+                  <select className="w-full mt-3 p-3 rounded-xl border-2 border-indigo-200 font-semibold text-slate-800 focus:border-indigo-500" 
+                    value={editingThemeId} onChange={e => setEditingThemeId(e.target.value)}>
+                    <option value="">-- Click to select a theme --</option>
+                    {THEMES.map(t => <option key={t.id} value={t.id}>Theme {t.id}: {t.title}</option>)}
+                  </select>
+                </div>
+                {editingTheme && (
+                  <div className="p-6 space-y-6">
+                    <div className="bg-indigo-50 p-5 rounded-xl border border-indigo-100">
+                      {editingTheme.id === "07" ? (
+                        <div className="space-y-2">
+                          <label className="font-bold text-indigo-900">What is the title of your custom theme?</label>
+                          <input type="text" className="w-full p-2 rounded-lg border border-indigo-200 focus:ring-1 focus:ring-indigo-500" placeholder="e.g., Water Puppet Restoration..." value={customFocus} onChange={e => setCustomFocus(e.target.value)} />
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="font-bold text-indigo-900 text-lg mb-1">{editingTheme.title}</h3>
+                          <p className="text-indigo-600 text-sm font-semibold mb-3">Focus: {editingTheme.focus}</p>
+                          <div className="bg-white p-3 rounded-lg border border-indigo-200">
+                            <span className="text-xs font-bold text-indigo-500 uppercase">Core Problem</span>
+                            <p className="text-indigo-900 font-semibold mt-1">{editingTheme.problem}</p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <div className="space-y-4">
+                      {[{key:'q1', label:'Q1: What problem does your robot solve?'}, {key:'q2', label:'Q2: How does your robot work? (Design & mechanism)'}, {key:'q3', label:'Q3: What makes your solution unique?'}].map(q => (
+                        <div key={q.key}>
+                          <label className="block text-sm font-bold text-slate-700 mb-2">{q.label}</label>
+                          <textarea className="w-full p-3 border-2 border-slate-200 rounded-xl min-h-[90px] focus:ring-0 focus:border-indigo-400 text-sm"
+                            value={formData[q.key]} onChange={e => setFormData({...formData, [q.key]: e.target.value})} />
+                        </div>
+                      ))}
+                      <div>
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Additional Notes / Sketches description</label>
+                        <textarea className="w-full p-3 border-2 border-slate-200 rounded-xl min-h-[70px] focus:ring-0 focus:border-indigo-400 text-sm"
+                          value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} />
+                      </div>
+                    </div>
+                    <button className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+                      onClick={handleSavePitch}><IconSend /> Save to Ideation Board</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* TAB: IDEATION BOARD */}
+            {activeTab === 'team' && (
+              <>
+                {/* Idea Post Composer */}
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+                  <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">💡 Share an Idea</h3>
+                  <p className="text-sm text-slate-500 mb-4">Post your thoughts, reference photos, sketches - let your teammates comment!</p>
+                  <textarea className="w-full p-3 border-2 border-slate-200 rounded-xl min-h-[90px] focus:ring-0 focus:border-indigo-400 text-base"
+                    placeholder="Share your idea or research finding..." value={newIdeaPost.content}
+                    onChange={e => setNewIdeaPost({...newIdeaPost, content: e.target.value})} />
+                  {newIdeaPost.imagesBase64.length > 0 && (
+                    <div className="flex gap-2 mt-3 flex-wrap">
+                      {newIdeaPost.imagesBase64.map((img, idx) => (
+                        <div key={idx} className="relative">
+                          <img src={img} alt={"Idea" + idx} className="h-24 w-24 object-cover rounded-xl border-2 border-slate-200" />
+                          <button onClick={() => removeIdeaImage(idx)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-600">✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between mt-3 gap-3">
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-600 font-semibold hover:bg-indigo-50 hover:border-indigo-300 transition-colors">
+                      <IconCamera /><span>Photos (max 4)</span>
+                      <input type="file" multiple accept="image/*" className="hidden" onChange={handleIdeaImageUpload} />
+                    </label>
+                    <button disabled={ideaUploadStatus !== ""} onClick={handlePostIdea} className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                      <IconSend />{ideaUploadStatus === "uploading" ? "Posting..." : ideaUploadStatus === "compressing" ? "Optimizing..." : "Post Idea"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Idea Posts Feed */}
+                <div className="space-y-5 mb-10">
+                  {(!teamData.ideaPosts || teamData.ideaPosts.length === 0) ? (
+                    <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400 italic">No ideas posted yet. Be the first! 🚀</div>
+                  ) : (
+                    teamData.ideaPosts.slice().sort((a,b) => b.id - a.id).map(post => (
+                      <div key={post.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <div className="font-bold text-slate-800">{post.author}</div>
+                            <div className="text-xs text-slate-400">{new Date(post.timestamp).toLocaleString()}</div>
+                          </div>
+                        </div>
+                        {post.content && (
+                          <div className="mb-3">
+                            <p className={"text-slate-700 whitespace-pre-wrap " + (!expandedPosts[post.id] ? 'line-clamp-7' : '')}>{post.content}</p>
+                            {(post.content.split('\n').length > 7 || post.content.length > 350) && (
+                              <button onClick={() => togglePost(post.id)} className="text-xs text-indigo-600 font-bold mt-1 hover:underline">
+                                {expandedPosts[post.id] ? '▲ Collapse' : '▼ Read more'}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                        {post.imageUrls && post.imageUrls.length > 0 && <SmartImageGrid images={post.imageUrls} />}
+                        <div className="border-t border-slate-100 pt-3 mt-2">
+                          <h5 className="text-xs font-bold text-slate-500 uppercase mb-2">💬 Comments</h5>
+                          <div className="space-y-2 mb-3 comment-scroll">
+                            {post.comments && post.comments.length > 0 ? post.comments.map((cmt, idx) => (
+                              <div key={idx} className={"p-2 rounded-lg text-sm " + (cmt.author === currentStudent.name ? "bg-indigo-50 text-indigo-900" : "bg-slate-50 text-slate-700")}>
+                                <strong>{cmt.author}:</strong> {cmt.text}
+                              </div>
+                            )) : <div className="text-xs text-slate-400 italic">No comments yet.</div>}
+                          </div>
+                          <div className="flex gap-2">
+                            <input type="text" className="flex-1 p-2 border-2 border-slate-200 rounded-lg text-sm focus:ring-0 focus:border-indigo-400" placeholder="Add a comment..." value={postCommentInputs[post.id]||""} onChange={e => setPostCommentInputs({...postCommentInputs, [post.id]: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleAddPostComment(post.id)} />
+                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700" onClick={() => handleAddPostComment(post.id)}>Send</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Pitches Grid */}
+                <div className="grid grid-cols-1 gap-6 pt-8 border-t-2 border-dashed border-indigo-200">
+                  {[1, 2, 3].map(roleId => {
+                    const sub = (teamData.pitches || []).find(p => p.roleId === roleId);
+                    const themeInfo = sub ? THEMES.find(t => t.id === sub.themeId) : null;
+                    const votes = (teamData.votes || []).filter(v => v.targetRoleId === roleId);
+                    const hasVoted = votes.some(v => v.voterName === currentStudent.name);
+                    return (
+                      <div key={roleId} className={"bg-white rounded-2xl shadow-sm border-t-4 " + (sub ? 'border-t-indigo-500' : 'border-t-slate-200') + " border border-slate-200 overflow-hidden"}>
+                        <div className="py-4 px-6 bg-slate-50 flex flex-row items-center justify-between rounded-t-2xl border-b border-slate-100">
+                          <div><div className="text-xs font-bold text-slate-500 uppercase">Member {roleId}</div><div className="text-lg font-bold text-slate-800">{(STUDENTS.find(s=>s.team===activeTeamId&&s.role===roleId))||{name:'(empty)'} ? ((STUDENTS.find(s=>s.team===activeTeamId&&s.role===roleId))||{name:'(empty)'}).name : '(empty)'}</div></div>
+                          {sub ? (
+                            <button onClick={() => handleVote(roleId)} className={"flex items-center gap-2 px-3 py-1.5 rounded-full border " + (hasVoted ? "bg-red-50 border-red-200 text-red-600" : "bg-white border-slate-200 text-slate-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600")}>
+                              <IconHeart filled={hasVoted} /><span className="font-bold text-sm">{votes.length}</span>
+                            </button>
+                          ) : <span className="text-sm text-slate-400 italic">No submission yet...</span>}
+                        </div>
+                        {sub && themeInfo && (
+                          <div className="p-6">
+                            <div className="mb-4 inline-block bg-indigo-100 text-indigo-800 text-sm font-bold px-3 py-1.5 rounded-lg">Theme: {sub.themeTitle}{sub.customFocus && sub.themeId==="07" ? " — " + sub.customFocus : ""}</div>
+                            <div style={{overflow:'hidden', maxHeight: expandedAnswers[roleId] ? 'none' : '11em', position:'relative'}}>
+                              <div className="grid grid-cols-1 gap-3 mb-2">
+                                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200"><span className="text-xs font-bold text-slate-500 uppercase">Q1: Problem</span><p className="text-slate-800 mt-1 text-sm">{sub.answers?.q1||'—'}</p></div>
+                                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200"><span className="text-xs font-bold text-slate-500 uppercase">Q2: Solution</span><p className="text-slate-800 mt-1 text-sm">{sub.answers?.q2||'—'}</p></div>
+                                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200"><span className="text-xs font-bold text-slate-500 uppercase">Q3: Unique Factor</span><p className="text-slate-800 mt-1 text-sm">{sub.answers?.q3||'—'}</p></div>
+                                {sub.answers?.notes && <div className="bg-amber-50 p-3 rounded-lg border border-amber-200"><span className="text-xs font-bold text-amber-700 uppercase">Notes</span><p className="text-amber-900 mt-1 text-sm">{sub.answers.notes}</p></div>}
+                              </div>
+                              {!expandedAnswers[roleId] && <div style={{position:'absolute', bottom:0, left:0, right:0, height:'50px', background:'linear-gradient(transparent, white)'}}></div>}
+                            </div>
+                            <button onClick={() => toggleAnswer(roleId)} className="text-xs text-indigo-600 font-bold mt-2 hover:underline">
+                              {expandedAnswers[roleId] ? '▲ Show less' : '▼ Show full pitch'}
+                            </button>
+                            <div className="mt-4 border-t border-slate-100 pt-4">
+                              <h5 className="text-xs font-bold text-slate-500 uppercase mb-2">💬 Comments</h5>
+                              <div className="space-y-2 mb-3 comment-scroll">
+                                {(sub.comments||[]).length > 0 ? (sub.comments||[]).map((c,i)=>(
+                                  <div key={i} className={"p-2 rounded-lg text-sm " + (c.author===currentStudent.name?"bg-indigo-50 text-indigo-900":"bg-slate-50 text-slate-700")}><strong>{c.author}:</strong> {c.text}</div>
+                                )) : <div className="text-xs text-slate-400 italic">No comments yet.</div>}
+                              </div>
+                              <div className="flex gap-2">
+                                <input type="text" className="flex-1 p-2 border border-slate-300 rounded-lg text-sm focus:ring-1 focus:ring-indigo-400" placeholder="Comment..." value={commentInputs[roleId]||""} onChange={e => setCommentInputs({...commentInputs, [roleId]: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleAddComment(roleId)} />
+                                <button className="bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700" onClick={() => handleAddComment(roleId)}>Send</button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+            {/* TAB: JOURNAL */}
+            {activeTab === 'journal' && (
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left: Add Log Form */}
+                {currentStudent.role !== 'coach' && (
+                  <div style={{width:'100%', maxWidth:'420px', flexShrink:0}}>
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-4">
+                      <div style={{background:(()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'};return t[activeTeamId]||t[1]})(), padding:'16px 20px'}}>
+                        <h3 style={{color:'white', fontWeight:'800', fontSize:'16px', margin:0}}>✏️ Add Progress Log</h3>
+                        <p style={{color:'rgba(199,210,254,0.8)', fontSize:'12px', margin:'4px 0 0'}}>Each entry becomes a notebook page</p>
+                      </div>
+                      <div className="p-5 space-y-4">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">📌 Title *</label>
+                          <input type="text" placeholder="e.g., Week 1: First Robot Build" className="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:border-indigo-400 focus:ring-0 font-semibold" value={newLog.title} onChange={e => setNewLog({...newLog, title:e.target.value})} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">📝 Activity Description *</label>
+                          <textarea placeholder="Describe the activity, challenges faced, and solutions..." className="w-full p-3 border-2 border-slate-200 rounded-xl min-h-[90px] text-sm focus:border-indigo-400 focus:ring-0 resize-none" value={newLog.content} onChange={e => setNewLog({...newLog, content:e.target.value})} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">📍 Location</label>
+                            <input type="text" placeholder="Robotics Lab" className="w-full p-2.5 border-2 border-slate-200 rounded-xl text-sm focus:border-indigo-400 focus:ring-0" value={newLog.location} onChange={e => setNewLog({...newLog, location:e.target.value})} />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">👥 Members</label>
+                            <div className="border-2 border-slate-200 rounded-xl p-2 max-h-24 overflow-y-auto">
+                              {STUDENTS.filter(s => s.team === activeTeamId && s.role !== 'coach').map(s => (
+                                <label key={s.id} className="flex items-center gap-2 text-xs cursor-pointer py-0.5">
+                                  <input type="checkbox" checked={newLog.participants.includes(s.name)} className="w-3 h-3 accent-indigo-600"
+                                    onChange={e => { const parts = newLog.participants; setNewLog({...newLog, participants: e.target.checked ? [...parts, s.name] : parts.filter(n=>n!==s.name)}); }} />
+                                  <span className="font-medium text-slate-700">{s.name}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{borderTop:'1px dashed #e2e8f0', paddingTop:'12px'}}>
+                          <div className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">📋 Work Details</div>
+                          <div className="space-y-2">
+                            <input type="text" placeholder="What did the team do today?" className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.workDone} onChange={e => setNewLog({...newLog, workDone:e.target.value})} />
+                            <input type="text" placeholder="Robot parts built / assembled..." className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.robotPart} onChange={e => setNewLog({...newLog, robotPart:e.target.value})} />
+                            <input type="text" placeholder="New code feature(s) added..." className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.codeFeature} onChange={e => setNewLog({...newLog, codeFeature:e.target.value})} />
+                            <input type="text" placeholder="Test results..." className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.testResult} onChange={e => setNewLog({...newLog, testResult:e.target.value})} />
+                          </div>
+                        </div>
+                        <div style={{borderTop:'1px dashed #e2e8f0', paddingTop:'12px'}}>
+                          <div className="text-xs font-bold text-sky-700 uppercase tracking-wide mb-2">🚀 Progress & Plan</div>
+                          <div className="space-y-2">
+                            <input type="text" placeholder="Current research progress / where are we now?" className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.progressStatus} onChange={e => setNewLog({...newLog, progressStatus:e.target.value})} />
+                            <input type="text" placeholder="Plan for the next session..." className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.nextPlan} onChange={e => setNewLog({...newLog, nextPlan:e.target.value})} />
+                            <input type="text" placeholder="Special notes for team members..." className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:border-indigo-400 focus:ring-0" value={newLog.memberNotes} onChange={e => setNewLog({...newLog, memberNotes:e.target.value})} />
+                          </div>
+                        </div>
+                        {/* Photo upload */}
+                        <div style={{borderTop:'1px dashed #e2e8f0', paddingTop:'12px'}}>
+                          <div className="text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">📸 Photos</div>
+                          {newLog.imagesBase64.length > 0 && (
+                            <div className="grid grid-cols-3 gap-2 mb-3">
+                              {newLog.imagesBase64.map((img, idx) => (
+                                <div key={idx} className="relative">
+                                  <img src={img} alt={"img"+idx} className="w-full h-16 object-cover rounded-lg border border-slate-200" />
+                                  <button onClick={() => removeImage(idx)} className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <label className="w-full cursor-pointer flex items-center justify-center gap-2 p-3 border-2 border-dashed border-slate-300 rounded-xl text-slate-500 text-sm font-semibold hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                            <IconCamera /><span>Add Photos (max 6)</span>
+                            <input type="file" multiple accept="image/*" onChange={handleImageUpload} className="hidden" />
+                          </label>
+                        </div>
+                        {/* Upload progress */}
+                        {uploadStatus ? (
+                          <div className="bg-slate-50 p-3 rounded-xl">
+                            <div className="flex justify-between text-xs font-semibold mb-1">
+                              <span>{uploadStatus === "compressing" ? "⚡ Optimizing..." : "☁️ Uploading..."}</span>
+                              <span>{uploadProgress}%</span>
+                            </div>
+                            <div className="w-full bg-slate-200 h-2 rounded-full">
+                              <div className="bg-emerald-500 h-full rounded-full transition-all" style={{width: uploadProgress + '%'}}></div>
+                            </div>
+                          </div>
+                        ) : (
+                          <button onClick={submitLog} className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors">
+                            <IconSend /> Save to Journal
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Right: Journal Feed */}
+                <div style={{flex:1, minWidth:0}}>
+                  <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+                    <div>
+                      <h3 className="text-2xl font-bold text-slate-800">Team Journey (Portfolio)</h3>
+                      <span className="text-sm text-slate-500">{journalLogs.length} {journalLogs.length === 1 ? 'Entry' : 'Entries'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {/* View mode toggle */}
+                      <div className="flex bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <button onClick={() => setJournalViewMode('list')} title="List View"
+                          style={{padding:'8px 14px', border:'none', cursor:'pointer', fontWeight:'700', fontSize:'13px',
+                            background: journalViewMode === 'list' ? '#4338ca' : 'transparent',
+                            color: journalViewMode === 'list' ? 'white' : '#64748b', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px'}}>
+                          <IconList /><span>List</span>
+                        </button>
+                        <button onClick={() => { setJournalViewMode('book'); setShowBookView(true); }} title="Book View"
+                          style={{padding:'8px 14px', border:'none', cursor:'pointer', fontWeight:'700', fontSize:'13px',
+                            background: journalViewMode === 'book' ? '#4338ca' : 'transparent',
+                            color: journalViewMode === 'book' ? 'white' : '#64748b', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px'}}>
+                          <IconBook /><span>Book</span>
+                        </button>
+                      </div>
+                      {journalLogs.length > 0 && (
+                        <button onClick={() => setShowBookView(true)}
+                          style={{display:'flex', alignItems:'center', gap:'6px', background:(()=>{const t={1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'};return t[activeTeamId]||t[1]})(), color:'white', border:'none', borderRadius:'12px', padding:'8px 16px', cursor:'pointer', fontWeight:'700', fontSize:'13px', boxShadow:'0 2px 8px rgba(0,0,0,0.25)'}}>
+                          📖 Open Notebook
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {journalLogs.length === 0 ? (
+                    <div style={{background:'white', borderRadius:'20px', border:'2px dashed #e2e8f0', padding:'60px 30px', textAlign:'center'}}>
+                      <div style={{fontSize:'56px', marginBottom:'16px'}}>📔</div>
+                      <h4 style={{fontWeight:'800', color:'#334155', fontSize:'18px', marginBottom:'8px'}}>No journal entries yet</h4>
+                      <p style={{color:'#94a3b8', fontSize:'14px'}}>Add your first progress log using the form on the left. Each entry will become a page in your research notebook!</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {journalLogs.sort((a,b) => b.id - a.id).map((log, logIdx) => {
+                        const images = log.imageUrls || [];
+                        const hasImages = images.length > 0;
+                        const ts = log.timestamp ? new Date(log.timestamp) : null;
+                        return (
+                          <div key={log.id} style={{background:'white', borderRadius:'20px', boxShadow:'0 2px 12px rgba(0,0,0,0.07)', border:'1px solid #e2e8f0', overflow:'hidden', transition:'box-shadow 0.2s'}}
+                            onMouseEnter={e => e.currentTarget.style.boxShadow='0 6px 24px rgba(67,56,202,0.12)'}
+                            onMouseLeave={e => e.currentTarget.style.boxShadow='0 2px 12px rgba(0,0,0,0.07)'}>
+                            {/* Card header */}
+                            <div style={{background: (() => { const t = {1:'linear-gradient(135deg,#1e3a5f,#2d5986)',2:'linear-gradient(135deg,#134e4a,#1a6b64)',3:'linear-gradient(135deg,#312e5a,#4a4580)',4:'linear-gradient(135deg,#1f2937,#374151)'}; return t[activeTeamId] || t[1]; })(), padding:'14px 20px', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                              <h4 style={{color:'white', fontWeight:'800', fontSize:'16px', margin:0, flex:1}}>{log.title}</h4>
+                              <div style={{color:'rgba(199,210,254,0.85)', fontSize:'11px', textAlign:'right', flexShrink:0, marginLeft:'12px'}}>
+                                {ts && <div style={{fontWeight:'700'}}>{ts.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</div>}
+                                {ts && <div>{ts.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div>}
+                              </div>
+                            </div>
+                            <div className="p-5">
+                              {/* Meta info */}
+                              <div style={{display:'flex', flexWrap:'wrap', gap:'12px', marginBottom:'14px', fontSize:'12px', color:'#64748b'}}>
+                                {ts && <span style={{display:'flex', alignItems:'center', gap:'4px'}}><IconCalendar /> {ts.toLocaleDateString()}</span>}
+                                {log.author && <span><strong>By:</strong> {log.author}</span>}
+                                {log.location && <span style={{display:'flex', alignItems:'center', gap:'4px'}}><IconMapPin /> {log.location}</span>}
+                                {log.participants && <span style={{display:'flex', alignItems:'center', gap:'4px'}}><IconUsers /> {log.participants}</span>}
+                              </div>
+                              
+                              {/* Content layout */}
+                              <div style={{display:'flex', flexDirection: hasImages ? 'column' : 'column', gap:'14px'}}>
+                                {/* Smart image grid */}
+                                {hasImages && <SmartImageGrid images={images} />}
+                                
+                                {/* Text content */}
+                                {log.content && (
+                                  <p style={{fontSize:'14px', color:'#334155', lineHeight:'1.7', whiteSpace:'pre-wrap', margin:0}}>{log.content}</p>
+                                )}
+                              </div>
+                              
+                              {/* Work Details */}
+                              {(log.workDone || log.robotPart || log.codeFeature || log.testResult) && (
+                                <div style={{marginTop:'14px', padding:'12px 14px', background:'#fffbeb', borderRadius:'12px', borderLeft:'3px solid #f59e0b'}}>
+                                  <div style={{fontSize:'10px', fontWeight:'800', color:'#92400e', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'8px'}}>📝 Work Details</div>
+                                  {log.workDone && <p style={{fontSize:'13px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Done:</strong> {log.workDone}</p>}
+                                  {log.robotPart && <p style={{fontSize:'13px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Robot Parts:</strong> {log.robotPart}</p>}
+                                  {log.codeFeature && <p style={{fontSize:'13px', color:'#78350f', margin:'0 0 4px 0'}}><strong>Code:</strong> {log.codeFeature}</p>}
+                                  {log.testResult && <p style={{fontSize:'13px', color:'#78350f', margin:0}}><strong>Test:</strong> {log.testResult}</p>}
+                                </div>
+                              )}
+                              
+                              {/* Progress & Plan */}
+                              {(log.progressStatus || log.nextPlan) && (
+                                <div style={{marginTop:'10px', padding:'12px 14px', background:'#eff6ff', borderRadius:'12px', borderLeft:'3px solid #3b82f6'}}>
+                                  <div style={{fontSize:'10px', fontWeight:'800', color:'#1e40af', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'8px'}}>🚀 Progress & Plan</div>
+                                  {log.progressStatus && <p style={{fontSize:'13px', color:'#1e3a8a', margin:'0 0 4px 0'}}><strong>Current Progress:</strong> {log.progressStatus}</p>}
+                                  {log.nextPlan && <p style={{fontSize:'13px', color:'#1e3a8a', margin:0}}><strong>Next Session Plan:</strong> {log.nextPlan}</p>}
+                                </div>
+                              )}
+                              
+                              {/* Member Notes */}
+                              {log.memberNotes && (
+                                <div style={{marginTop:'10px', padding:'12px 14px', background:'#fdf2f8', borderRadius:'12px', borderLeft:'3px solid #ec4899'}}>
+                                  <div style={{fontSize:'10px', fontWeight:'800', color:'#9d174d', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'6px'}}>📌 Notes</div>
+                                  <p style={{fontSize:'13px', color:'#831843', margin:0}}>{log.memberNotes}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {/* TAB: SCHEDULE */}
+            {activeTab === 'schedule' && (
+              <div>
+                <div style={{background:'linear-gradient(135deg,#f8faff,#eef2ff)', padding:'16px 20px', borderRadius:'14px', marginBottom:'16px', border:'1px solid #e0e7ff'}}>
+                  <h2 style={{fontSize:'18px', fontWeight:'800', color:'#3730a3', margin:'0 0 4px'}}>📅 Weekly Practice Schedule</h2>
+                  <p style={{fontSize:'13px', color:'#6366f1', margin:0}}>Assign your team's lunch and afternoon practice slots for each week.</p>
+                </div>
+                <TeamScheduler students={students} currentStudent={currentStudent} />
+              </div>
+            )}
+          </main>
+        </div>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
-
