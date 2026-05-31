@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f0f4ff;
+  --foreground: #0f172a;
+}
+
+body {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* A4 Page Styles for Book View */
+.a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* Gear background pattern */
+.gear-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Page flip animations */
+.page-flip-enter {
+  animation: slideInRight 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Comment scroll */
+.comment-scroll {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.comment-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.comment-scroll::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 4px;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .a4-page {
+    box-shadow: none;
+    page-break-after: always;
+  }
+}
+
+/* Responsive A4 */
+@media (max-width: 900px) {
+  .a4-page {
+    width: 100%;
+    min-height: unset;
+  }
+}
+
+/* Line clamp utility for older browsers */
+.line-clamp-7 {
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
